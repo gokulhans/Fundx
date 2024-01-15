@@ -1,15 +1,19 @@
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from '../../utils/axios'
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
+import axiosClient from "@/utils/axios";
+import toast from "react-hot-toast";
 
-import React from "react";
-import { Link } from "react-router-dom";
-
-const SignIn = () => {
+const SignIn = ({ setIsUser }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [showError, setShowError] = useState(null);
+  const navigate = useNavigate();
 
   const schema = yup.object().shape({
     email: yup
@@ -18,6 +22,7 @@ const SignIn = () => {
       .required("Please fill email"),
     password: yup.string().required("Please fill the password"),
   });
+
   const {
     register,
     handleSubmit,
@@ -26,20 +31,32 @@ const SignIn = () => {
     resolver: yupResolver(schema),
   });
 
+  const { mutateAsync } = useMutation({
+    mutationFn: (data) => {
+      return axiosClient.post("/user/login", data);
+    },
+    onSuccess: (data) => {
+      toast.success("SignIn Success!");
+      const { username, id, token, email } = data.data;
+      localStorage.setItem("isUser", true);
+      localStorage.setItem("id", id);
+      localStorage.setItem("username", username);
+      localStorage.setItem("token", token);
+      localStorage.setItem("email", email);
+      setIsUser(true);
+      setIsLoading(false);
+      navigate("/");
+    },
+    onError: (error) => {
+      setShowError(error.response.data.message);
+      setIsLoading(false);
+    },
+  });
 
-
-  const onSubmit = async (loginData) => {
-    try {
-      console.log(loginData);
-      const res = await axios.post("user/login/", loginData);
-
-      localStorage.setItem("userdata", res.data);
-            window.location.reload(false)
-    } catch (err) {
-      console.log(err);
-    }
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    mutateAsync(data);
   };
-
 
   return (
     <>
@@ -61,6 +78,9 @@ const SignIn = () => {
                 type="email"
                 {...register("email")}
               />
+              <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+                {errors.email?.message}
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -70,14 +90,21 @@ const SignIn = () => {
                 required
                 type="password"
                 {...register("password")}
-
               />
+              <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+                {errors.password?.message}
+              </p>
             </div>
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" disabled={isLoading}>
               Sign In
             </Button>
+            {showError && (
+              <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+                {showError}
+              </p>
+            )}
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-5">
             <Link
               className="text-sm underline text-gray-500 dark:text-gray-400"
               to={"/forgot-password"}
