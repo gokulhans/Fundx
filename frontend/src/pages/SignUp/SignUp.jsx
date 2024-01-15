@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "react-query";
+import axiosClient from "@/utils/axios";
 
 const SignUp = ({ setIsUser }) => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [showError, setShowError] = useState(null);
+  const [showError, setShowError] = useState(null);
   const navigate = useNavigate();
 
   const schema = yup.object().shape({
@@ -39,8 +40,9 @@ const SignUp = ({ setIsUser }) => {
     onSuccess: (data) => {
       localStorage.setItem("userdata", data.data);
       setIsUser(true);
-      navigate("/");
+      setIsLoading(false);
       toast.success("SignUp Success!");
+      navigate("/");
     },
     onError: (error) => {
       if (error.response && error.response.status === 400) {
@@ -55,6 +57,7 @@ const SignUp = ({ setIsUser }) => {
   });
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     mutateAsync(data);
   };
 
@@ -133,9 +136,14 @@ const SignUp = ({ setIsUser }) => {
               {errors.confirmPassword?.message}
             </p>
           </div>
-          <Button className="w-full" type="submit">
+          <Button className="w-full" type="submit" disabled={isLoading}>
             Sign Up
           </Button>
+          {showError && (
+            <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+              {showError}
+            </p>
+          )}
         </form>
         <div className="flex justify-center items-center">
           <Link
