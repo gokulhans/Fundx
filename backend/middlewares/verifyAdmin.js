@@ -21,4 +21,4 @@ const verifyAdmin = async (req, res, next) => {
     }
 };
 
-module.exports = verifyAdmin;
+module.exports = verifyAdmin;a

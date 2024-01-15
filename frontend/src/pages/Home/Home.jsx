@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import axiosClient from "../../utils/axios";
+import { Button } from "@/components/ui/button";
 
 const Home = () => {
   const fetchDrops = async () => {
@@ -41,7 +42,11 @@ const Home = () => {
 
   if (isError) return <p>An error has occurred: {error.message}</p>;
 
-  return <ul>{data.msg}</ul>;
+  return (
+    <div className="">
+      <Button>{data.msg}</Button>
+    </div>
+  );
 };
 
 export default Home;
