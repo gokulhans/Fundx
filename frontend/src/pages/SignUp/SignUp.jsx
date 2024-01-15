@@ -3,6 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useForm } from 'react-hook-form'
+import * as yup from "yup"
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const SignUp = () => {
   const schema = yup.object().shape({

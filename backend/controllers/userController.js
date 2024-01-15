@@ -30,11 +30,23 @@ const userController = {
 
     console.log(`User created success ${user}`);
 
+    const token = jwt.sign(
+      {
+        user: {
+          username: user.firstname,
+          email: user.email,
+          id: user.id,
+        },
+      },
+      process.env.JWT_SECRET_KEY
+    );
+
     if (user) {
       res.status(201).json({
         id: user.id,
         username: user.firstname,
         email: user.email,
+        token:token
       });
     } else {
       res.status(400);
@@ -56,14 +68,19 @@ const userController = {
       const token = jwt.sign(
         {
           user: {
-            username: user.username,
+            username: user.firstname,
             email: user.email,
             id: user.id,
           },
         },
         process.env.JWT_SECRET_KEY
       );
-      res.json({ token });
+      res.json({ 
+        id: user.id,
+        username: user.firstname,
+        email: user.email,
+        token:token
+       });
     } else {
       res.status(401);
       throw new Error("Password is incorrect");
