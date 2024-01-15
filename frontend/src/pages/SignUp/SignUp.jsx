@@ -5,6 +5,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const SignUp = () => {
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    email: yup.string().email().required(),
+    password: yup.string().min(4).max(8).required(),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match")
+      .required(),
+    acceptTerms: yup
+      .boolean()
+      .oneOf([true], "You must accept the terms and conditions to proceed")
+      .required(),
+  });
+
   return (
     <>
       <div className="mx-auto max-w-md space-y-6">
