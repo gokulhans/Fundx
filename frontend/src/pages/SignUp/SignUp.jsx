@@ -3,21 +3,60 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "react-query";
 
-const SignUp = () => {
+const SignUp = ({ setIsUser }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  // const [showError, setShowError] = useState(null);
+  const navigate = useNavigate();
+
   const schema = yup.object().shape({
-    name: yup.string().required(),
+    firstname: yup.string().required(),
+    lastname: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().min(4).max(8).required(),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], "Passwords must match")
       .required(),
-    acceptTerms: yup
-      .boolean()
-      .oneOf([true], "You must accept the terms and conditions to proceed")
-      .required(),
   });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const { mutateAsync } = useMutation({
+    mutationFn: (data) => {
+      return axiosClient.post("/user/register", data);
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("userdata", data.data);
+      setIsUser(true);
+      navigate("/");
+      toast.success("SignUp Success!");
+    },
+    onError: (error) => {
+      if (error.response && error.response.status === 400) {
+        setShowError(error.response.data.error);
+        console.error("Duplicate email error:", error.response.data.error);
+      } else {
+        setShowError(error.response.data.error);
+        console.error("Internal Server Error:", error.response.data.error);
+      }
+      setIsLoading(false);
+    },
+  });
+
+  const onSubmit = (data) => {
+    mutateAsync(data);
+  };
 
   return (
     <>
@@ -28,15 +67,31 @@ const SignUp = () => {
             Enter your information to create an account
           </p>
         </div>
-        <div className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="first-name">First name</Label>
-              <Input id="first-name" placeholder="John" required />
+              <Input
+                id="first-name"
+                placeholder="John"
+                {...register("firstname")}
+                required
+              />
+              <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+                {errors.firstname?.message}
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="last-name">Last name</Label>
-              <Input id="last-name" placeholder="Doe" required />
+              <Input
+                id="last-name"
+                placeholder="Doe"
+                {...register("lastname")}
+                required
+              />
+              <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+                {errors.lastname?.message}
+              </p>
             </div>
           </div>
           <div className="space-y-2">
@@ -46,7 +101,11 @@ const SignUp = () => {
               placeholder="john@example.com"
               required
               type="email"
+              {...register("email")}
             />
+            <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+              {errors.email?.message}
+            </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
@@ -55,7 +114,11 @@ const SignUp = () => {
               placeholder="********"
               required
               type="password"
+              {...register("password")}
             />
+            <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+              {errors.password?.message}
+            </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm-password">Confirm Password</Label>
@@ -64,12 +127,16 @@ const SignUp = () => {
               placeholder="********"
               required
               type="password"
+              {...register("confirmPassword")}
             />
+            <p className="text-xs text-red-600 dark:text-red-500 mt-2">
+              {errors.confirmPassword?.message}
+            </p>
           </div>
           <Button className="w-full" type="submit">
             Sign Up
           </Button>
-        </div>
+        </form>
         <div className="flex justify-center items-center">
           <Link
             className="text-sm underline text-gray-500 dark:text-gray-400"
