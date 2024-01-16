@@ -2,12 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "react-query";
 import axiosClient from "@/utils/axios";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const SignUp = ({ setIsUser }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,20 +39,19 @@ const SignUp = ({ setIsUser }) => {
       return axiosClient.post("/user/register", data);
     },
     onSuccess: (data) => {
-      localStorage.setItem("userdata", data.data);
+      toast.success("SignUp Success!");
+      const { username, id, token, email } = data.data;
+      localStorage.setItem("isUser", true);
+      localStorage.setItem("id", id);
+      localStorage.setItem("username", username);
+      localStorage.setItem("token", token);
+      localStorage.setItem("email", email);
       setIsUser(true);
       setIsLoading(false);
-      toast.success("SignUp Success!");
       navigate("/");
     },
     onError: (error) => {
-      if (error.response && error.response.status === 400) {
-        setShowError(error.response.data.error);
-        console.error("Duplicate email error:", error.response.data.error);
-      } else {
-        setShowError(error.response.data.error);
-        console.error("Internal Server Error:", error.response.data.error);
-      }
+      setShowError(error.response.data.message);
       setIsLoading(false);
     },
   });

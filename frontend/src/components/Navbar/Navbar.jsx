@@ -4,12 +4,13 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import DarkModeToggler from "../DarkModeToggler/DarkModeToggler";
+import LogoutButton from "../LogoutButton/LogoutButton";
 
 const Navbar = ({ isUser, setIsUser }) => {
   return (
     <>
-      <header className="fixed top-0 left-0 flex h-16 w-full shrink-0 items-center px-4 md:px-6 dark:bg-gray-900">
-        <Link className="mr-6 flex items-center" href="#">
+      <header className="fixed top-0 left-0 flex h-16 w-full shrink-0 items-center px-4 md:px-6 z-50 bg-blue-50/70 dark:bg-gray-900/70">
+        <Link className="mr-6 flex items-center" to={"/"}>
           <MountainIcon className="h-6 w-6" />
           <span className="ml-2 text-lg font-semibold">
             <b>Fundx</b>
@@ -40,12 +41,13 @@ const Navbar = ({ isUser, setIsUser }) => {
               </div>
               <Avatar className="h-9 w-9">
                 <AvatarImage alt="User Avatar" src="/placeholder-avatar.jpg" />
-                <AvatarFallback>JP</AvatarFallback>
+                <AvatarFallback>
+                  <b>
+                    {localStorage.getItem("username").charAt(0).toUpperCase()}
+                  </b>
+                </AvatarFallback>
               </Avatar>
-              <Button className="rounded-full" size="icon" variant="ghost">
-                <LogOutIcon className="h-6 w-6" />
-                <span className="sr-only">Logout</span>
-              </Button>
+              <LogoutButton setIsUser={setIsUser} />
             </>
           )}
           <DarkModeToggler />
@@ -56,27 +58,6 @@ const Navbar = ({ isUser, setIsUser }) => {
 };
 
 export default Navbar;
-
-function LogOutIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" x2="9" y1="12" y2="12" />
-    </svg>
-  );
-}
 
 function MountainIcon(props) {
   return (
