@@ -8,9 +8,10 @@ import SignUp from "./pages/SignUp/SignUp";
 import SignIn from "./pages/SignIn/SignIn";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ForgotPassword/ResetPassword";
+import InvestorProfile from "./pages/Profile/InvestorProfile";
+import StartupProfile from "./pages/Profile/StartupProfile";
 
 function App() {
-
   const [isUser, setIsUser] = useState(localStorage.getItem("isUser"));
   const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isAdmin"));
 
@@ -55,6 +56,16 @@ function App() {
             ) : (
               <>
                 <Route exact path="/" element={<Home isUser={isUser} />} />
+                <Route
+                  exact
+                  path="/investor-profile"
+                  element={<InvestorProfile isUser={isUser} />}
+                />
+                <Route
+                  exact
+                  path="/startup-profile"
+                  element={<StartupProfile isUser={isUser} />}
+                />
                 <Route path="*" element={<Error isUser={isUser} />} />
               </>
             )}

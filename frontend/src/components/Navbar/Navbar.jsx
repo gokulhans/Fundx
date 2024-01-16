@@ -9,8 +9,8 @@ import LogoutButton from "../LogoutButton/LogoutButton";
 const Navbar = ({ isUser, setIsUser }) => {
   return (
     <>
-      <header className="fixed top-0 left-0 flex h-16 w-full shrink-0 items-center px-4 md:px-6 dark:bg-gray-900">
-        <Link className="mr-6 flex items-center" href="#">
+      <header className="fixed top-0 left-0 flex h-16 w-full shrink-0 items-center px-4 md:px-6 z-50 bg-blue-50/70 dark:bg-gray-900/70">
+        <Link className="mr-6 flex items-center" to={"/"}>
           <MountainIcon className="h-6 w-6" />
           <span className="ml-2 text-lg font-semibold">
             <b>Fundx</b>
@@ -47,10 +47,7 @@ const Navbar = ({ isUser, setIsUser }) => {
                   </b>
                 </AvatarFallback>
               </Avatar>
-              <Button className="rounded-full" size="icon" variant="ghost">
-                <LogoutButton setIsUser={setIsUser} />
-                <span className="sr-only">Logout</span>
-              </Button>
+              <LogoutButton setIsUser={setIsUser} />
             </>
           )}
           <DarkModeToggler />
