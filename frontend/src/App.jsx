@@ -10,6 +10,8 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ForgotPassword/ResetPassword";
 import InvestorProfile from "./pages/Profile/InvestorProfile";
 import StartupProfile from "./pages/Profile/StartupProfile";
+import AdminFooter from "./components/Footer/AdminFooter";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   const [isUser, setIsUser] = useState(localStorage.getItem("isUser"));
@@ -71,7 +73,15 @@ function App() {
             )}
           </Routes>
         </div>
-        {isAdmin ? <></> : <>{/* <Footer isUser={isUser} /> */}</>}
+        {isAdmin ? (
+          <>
+            <AdminFooter isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
+          </>
+        ) : (
+          <>
+            <Footer isUser={isUser} />
+          </>
+        )}
       </div>
     </>
   );
