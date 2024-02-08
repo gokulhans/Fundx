@@ -12,10 +12,22 @@ import InvestorProfile from "./pages/Profile/InvestorProfile";
 import StartupProfile from "./pages/Profile/StartupProfile";
 import AdminFooter from "./components/Footer/AdminFooter";
 import Footer from "./components/Footer/Footer";
+import InvestorHome from "./pages/Investor/InvestorHome";
+import StartupHome from "./pages/Startup/StartupHome";
+import SingleInvestor from "./pages/Investor/SingleInvestor";
+import SingleStartup from "./pages/Startup/SingleStartup";
 
 function App() {
   const [isUser, setIsUser] = useState(localStorage.getItem("isUser"));
-  const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isAdmin"));
+  const [isAdmin, setIsAdmin] = useState(
+    localStorage.getItem("isAdmin") || false
+  );
+  const [isStartup, setisStartup] = useState(
+    localStorage.getItem("isStartup") || false
+  );
+  const [isInvestor, setisInvestor] = useState(
+    localStorage.getItem("isInvestor")
+  );
 
   return (
     <>
@@ -57,18 +69,32 @@ function App() {
               </>
             ) : (
               <>
-                <Route exact path="/" element={<Home isUser={isUser} />} />
+                <Route path="/single-startup" element={<SingleStartup />} />
+                <Route path="/single-investor" element={<SingleInvestor />} />
+                <Route exact path="/" element={<Home />} />
+                <Route exact path="/startup-home" element={<StartupHome />} />
+                <Route exact path="/investor-home" element={<InvestorHome />} />
                 <Route
                   exact
                   path="/investor-profile"
-                  element={<InvestorProfile isUser={isUser} />}
+                  element={
+                    <InvestorProfile
+                      isUser={isUser}
+                      setisInvestor={setisInvestor}
+                    />
+                  }
                 />
                 <Route
                   exact
                   path="/startup-profile"
-                  element={<StartupProfile isUser={isUser} />}
+                  element={
+                    <StartupProfile
+                      isUser={isUser}
+                      setisStartup={setisStartup}
+                    />
+                  }
                 />
-                <Route path="*" element={<Error isUser={isUser} />} />
+                {/* <Route path="*" element={<Error isUser={isUser} />} /> */}
               </>
             )}
           </Routes>

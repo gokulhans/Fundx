@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import axiosClient from "../../utils/axios";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import StartupCard from '../../components/Cards/StartupCard'
+import StartupCard from "../../components/Cards/StartupCard";
 
 const Home = () => {
   // const fetchDrops = async () => {
@@ -60,7 +60,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <StartupCard/>
     </div>
   );
 };
