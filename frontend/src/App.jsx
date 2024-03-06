@@ -12,6 +12,7 @@ import InvestorProfile from "./pages/Profile/InvestorProfile";
 import StartupProfile from "./pages/Profile/StartupProfile";
 import AdminFooter from "./components/Footer/AdminFooter";
 import Footer from "./components/Footer/Footer";
+import InvestorOrStartup from "./pages/ChooseInvestorOrStartupPage/InvestorOrStartup";
 
 function App() {
   const [isUser, setIsUser] = useState(localStorage.getItem("isUser"));
@@ -67,6 +68,11 @@ function App() {
                   exact
                   path="/startup-profile"
                   element={<StartupProfile isUser={isUser} />}
+                />
+                 <Route
+                  exact
+                  path="/choose-category"
+                  element={<InvestorOrStartup isUser={isUser} />}
                 />
                 <Route path="*" element={<Error isUser={isUser} />} />
               </>
