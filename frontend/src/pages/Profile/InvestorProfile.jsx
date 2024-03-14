@@ -19,7 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
-const InvestorProfile = () => {
+const InvestorProfile = ({ setisInvestor }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showError, setShowError] = useState(null);
   const navigate = useNavigate();
@@ -74,13 +74,21 @@ const InvestorProfile = () => {
   });
 
   const onSubmit = (data) => {
-    setIsLoading(true);
-    mutateAsync(data);
+    // setIsLoading(true);
+    // mutateAsync(data);
+    toast.success("Profile Completed!");
+    localStorage.setItem("setisInvestor", true);
+    setisInvestor(true);
+    setIsLoading(false);
+    navigate("/investor-home");
   };
 
   return (
     <div className="flex w-full max-w-xl my-5 mb-12 flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <form className="w-full max-w-xl mx-auto space-y-6 bg-white dark:bg-gray-800 shadow-md rounded-md p-8">
+      <form
+        className="w-full max-w-xl mx-auto space-y-6 bg-white dark:bg-gray-800 shadow-md rounded-md p-8"
+        onSubmit={onSubmit}
+      >
         {/* Existing fields */}
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Investor Profile</h1>
