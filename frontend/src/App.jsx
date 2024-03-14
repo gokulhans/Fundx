@@ -16,6 +16,7 @@ import InvestorHome from "./pages/Investor/InvestorHome";
 import StartupHome from "./pages/Startup/StartupHome";
 import SingleInvestor from "./pages/Investor/SingleInvestor";
 import SingleStartup from "./pages/Startup/SingleStartup";
+import InvestorOrStartup from "./pages/ChooseInvestorOrStartupPage/InvestorOrStartup";
 
 function App() {
   const [isUser, setIsUser] = useState(localStorage.getItem("isUser"));
@@ -94,7 +95,12 @@ function App() {
                     />
                   }
                 />
-                {/* <Route path="*" element={<Error isUser={isUser} />} /> */}
+                 <Route
+                  exact
+                  path="/choose-category"
+                  element={<InvestorOrStartup isUser={isUser} />}
+                />
+                <Route path="*" element={<Error isUser={isUser} />} />
               </>
             )}
           </Routes>
